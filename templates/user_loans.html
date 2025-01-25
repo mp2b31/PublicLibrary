@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.name }}'s Loan History</title>
+</head>
+<body>
+    <h1>{{ user.name }}'s Loan History</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Loan Date</th>
+                <th>Return Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+                <tr>
+                    <td>{{ loan.book.title }}</td>
+                    <td>{{ loan.loan_date }}</td>
+                    <td>{{ loan.return_date or 'Not returned yet' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="/">Back to Menu</a>
+</body>
+</html>

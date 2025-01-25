@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Statistics</title>
+</head>
+<body>
+    <h1>Loan Statistics</h1>
+    <ul>
+        <li>Total Loans: {{ total_loans }}</li>
+        <li>Loaned Books: {{ loaned_books }}</li>
+        <li>Returned Books: {{ returned_books }}</li>
+        <li>Average Loan Duration: {{ loan_duration_avg|round(2) }} days</li>
+    </ul>
+    <br>
+    <a href="/">Back to Menu</a>
+</body>
+</html>
