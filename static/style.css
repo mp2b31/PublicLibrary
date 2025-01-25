@@ -1,0 +1,24 @@
+body {
+    background-image: url('/static/background.jpg');
+    background-size: 100% 100%; /* Stretches the image to fit the window dimensions */
+    background-position: center center; /* Keeps the image centered */
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+h1, h2, h3, p, a {
+    color: white;
+}
+
+a {
+    text-decoration: none; 
+}
+
+body {
+    padding: 20px;
+}

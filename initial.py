@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for 
 from flask_sqlalchemy import SQLAlchemy
 import random
 import numpy as np
@@ -107,8 +107,8 @@ def seed_database():
 
 #-------------------ROUTES------------------------
 @app.route('/')
-def index():
-    return render_template('index.html') 
+def main_menu():
+    return render_template('main_menu.html') 
 
 
 @app.route('/books') #book list
@@ -117,24 +117,42 @@ def books():
     return render_template('books.html', books=books)
 
 
-@app.route('/book_availability')
+@app.route('/availability')
 def availability():
-    available_books = Book.query.filter_by(status="available").all()
-    borrowed_books = Book.query.filter_by(status="borrowed").all()
     return render_template('availability.html', available_books=available_books, borrowed_books=borrowed_books)
 
 
+@app.route('/availability/available_books')
+def available_books():
+    available_books = Book.query.filter_by(status="available").all()
+    return render_template('available_books.html', available_books=available_books)
+
+@app.route('/availability/borrowed_books')
+def borrowed_books():
+    borrowed_books = Book.query.filter_by(status="borrowed").all()
+    return render_template('borrowed_books.html', borrowed_books=borrowed_books)
+
+
+
 @app.route('/user_loans')
-def list_users():
+def user_loans_menu():
     users = User.query.all()  
-    return render_template('list_users.html', users=users)
+    return render_template('user_loans_menu.html', users=users)
 
 
-@app.route('/user_loans/<int:user_id>') #embedded to user_loans
+@app.route('/user_loans/<int:user_id>')
 def user_loans(user_id):
-    loans = Loan.query.filter_by(user_id=user_id).all()
     user = User.query.get(user_id)
-    return render_template('user_loans.html', loans=loans, user=user)
+    loans = Loan.query.filter_by(user_id=user_id).all()
+    
+    returned_loans = [loan for loan in loans if loan.return_date is not None]
+    not_returned_loans = [loan for loan in loans if loan.return_date is None]
+    returned_loans.sort(key=lambda loan: loan.return_date, reverse=True)
+
+    return render_template('user_loans.html', 
+                           user=user, 
+                           returned_loans=returned_loans, 
+                           not_returned_loans=not_returned_loans)
 
 
 @app.route('/loan_statistics')

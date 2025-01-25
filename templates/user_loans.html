@@ -4,27 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.name }}'s Loan History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>{{ user.name }}'s Loan History</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Book Title</th>
-                <th>Loan Date</th>
-                <th>Return Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for loan in loans %}
+
+    <h2>Pending Return</h2>
+    {% if not_returned_loans %}
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ loan.book.title }}</td>
-                    <td>{{ loan.loan_date }}</td>
-                    <td>{{ loan.return_date or 'Not returned yet' }}</td>
+                    <th>Book Title</th>
+                    <th>Loan Date</th>
+                    <th>Return Date</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for loan in not_returned_loans %}
+                    <tr>
+                        <td>{{ loan.book.title }}</td>
+                        <td>{{ loan.loan_date }}</td>
+                        <td>Not returned yet</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No books are overdue or not returned yet.</p>
+    {% endif %}
+
+    <h2>Previously Loaned</h2>
+    {% if returned_loans %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Loan Date</th>
+                    <th>Return Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in returned_loans %}
+                    <tr>
+                        <td>{{ loan.book.title }}</td>
+                        <td>{{ loan.loan_date }}</td>
+                        <td>{{ loan.return_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No returned books.</p>
+    {% endif %}
+
+    
     <br>
     <a href="/">Back to Menu</a>
 </body>

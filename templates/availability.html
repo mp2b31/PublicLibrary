@@ -4,22 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Availability</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Available Books</h1>
+    <h1>Book Availability</h1>
     <ul>
-        {% for book in available_books %}
-            <li>{{ book.title }} by {{ book.author }}</li>
-        {% endfor %}
-    </ul>
-
-    <h1>Borrowed Books</h1>
-    <ul>
-        {% for book in borrowed_books %}
-            <li>{{ book.title }} by {{ book.author }}</li>
-        {% endfor %}
+        <li><a href="{{ url_for('available_books') }}">Currently Available Books</a></li>
+        <li><a href="{{ url_for('borrowed_books') }}">Currently Borrowed Books</a></li>
     </ul>
     <br>
-    <a href="/">Back to Menu</a>
+    <a href="/">Back to Main Menu</a>
 </body>
 </html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Library Management System - Main Menu</h1>
+    <ul>
+        <li><a href="{{ url_for('books') }}">View Books</a></li>
+        <li><a href="{{ url_for('availability') }}">Available & Borrowed Books</a></li>
+        <li><a href="{{ url_for('loan_statistics') }}">Loan Statistics</a></li>
+        <li><a href="{{ url_for('user_loans_menu') }}">Users' Loan History</a></li>
+    </ul>
+</body>
+</html>
