@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import random
 import numpy as np
 from datetime import datetime, date, timedelta
+from statistics import mean 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db' # points to the SQLite database file
@@ -174,6 +175,41 @@ def loan_statistics():
                            loaned_books=loaned_books, 
                            returned_books=returned_books, 
                            loan_duration_avg=loan_duration_avg)
+
+@app.route('/statistics')
+def statistics():
+    loans_2024 = Loan.query.filter(Loan.loan_date.between('2024-01-01', '2024-12-31')).all()
+    avg_loans_per_user = len(loans_2024) / User.query.count() if User.query.count() > 0 else 0
+
+    returned_loans = [loan for loan in loans_2024 if loan.return_date]
+    durations = [(loan.return_date - loan.loan_date).days for loan in returned_loans]
+    avg_duration = mean(durations) if durations else 0
+
+    #books borrowed
+    borrowed_stats = db.session.query(
+        Loan.user_id, db.func.count(Loan.id).label('loan_count')
+    ).group_by(Loan.user_id).order_by(db.desc('loan_count')).limit(3).all()
+    borrowed_data = {
+        'labels': [User.query.get(stat[0]).name for stat in borrowed_stats],
+        'values': [stat[1] for stat in borrowed_stats],
+    }
+
+    #loan duration
+    duration_stats = db.session.query(
+        Loan.user_id, db.func.avg(db.func.julianday(Loan.return_date) - db.func.julianday(Loan.loan_date)).label('avg_duration')
+    ).filter(Loan.return_date.isnot(None)).group_by(Loan.user_id).order_by(db.desc('avg_duration')).limit(3).all()
+    duration_data = {
+        'labels': [User.query.get(stat[0]).name for stat in duration_stats],
+        'values': [stat[1] for stat in duration_stats],
+    }
+
+    return render_template(
+        'statistics.html',
+        avg_loans_per_user=avg_loans_per_user,
+        avg_duration=avg_duration,
+        borrowed_data=borrowed_data,
+        duration_data=duration_data,
+    )
 
 
 

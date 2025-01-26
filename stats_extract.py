@@ -12,7 +12,7 @@ with app.app_context():
         print("Database not found. Please make sure the application is set up properly.")
         exit()
 
-    def calculate_statistics():
+    def extract_stats():
         print("\n--- Library Descriptive Statistics ---")
 
         total_books = Book.query.count()
@@ -55,4 +55,4 @@ with app.app_context():
             print("No books have been borrowed yet.")
 
     if __name__ == "__main__":
-        calculate_statistics()
+        extract_stats()

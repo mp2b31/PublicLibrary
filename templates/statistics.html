@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        button {
+            background-color: rgba(165, 42, 42, 0.75); /* 75% opaque brown */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 8px; 
+        }
+
+        button:hover {
+            background-color: rgba(139, 69, 19, 0.75); /* Darker brown on hover */
+        }
+        .container {
+            padding: 20px;
+        }
+        .statistics-section {
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Library Descriptive Statistics</h1>
+
+    <!-- Section 1: Average Statistics -->
+    <div>
+        <h2>2024 Statistics</h2>
+        <p>Average Number of Loans per User: {{ avg_loans_per_user }}</p>
+        <p>Average Duration of Returned Loans: {{ avg_duration }} days</p>
+    </div>
+
+    <!-- Section 2: Graphical Representation -->
+    <div>
+        <h2>Top Users</h2>
+        <canvas id="statsChart"></canvas>
+        <br>
+        <button id="toggleButton">View Users with Longest Loan Duration</button>
+    </div>
+
+    <script>
+        // Data for the two charts
+        const borrowedData = {{ borrowed_data | safe }};
+        const durationData = {{ duration_data | safe }};
+
+        // Initial Chart Configuration
+        const ctx = document.getElementById('statsChart').getContext('2d');
+        let currentChartType = 'borrowed'; // Start with 'borrowed' chart
+        let chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: borrowedData.labels,
+                datasets: [{
+                    label: 'Books Borrowed',
+                    data: borrowedData.values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                }],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+
+        // Toggle Button Functionality
+        document.getElementById('toggleButton').addEventListener('click', function () {
+            if (currentChartType === 'borrowed') {
+                // Switch to duration chart
+                chart.data.labels = durationData.labels;
+                chart.data.datasets[0].label = 'Average Loan Duration (days)';
+                chart.data.datasets[0].data = durationData.values;
+                chart.data.datasets[0].backgroundColor = 'rgba(255, 99, 132, 0.5)';
+                chart.data.datasets[0].borderColor = 'rgba(255, 99, 132, 1)';
+                chart.update();
+                currentChartType = 'duration';
+                this.textContent = 'View Users Who Borrowed the Most Books';
+            } else {
+                // Switch back to borrowed chart
+                chart.data.labels = borrowedData.labels;
+                chart.data.datasets[0].label = 'Books Borrowed';
+                chart.data.datasets[0].data = borrowedData.values;
+                chart.data.datasets[0].backgroundColor = 'rgba(255, 140, 0, 0.5)';
+                chart.data.datasets[0].borderColor = 'rgba(255, 140, 0, 1)';
+                chart.update();
+                currentChartType = 'borrowed';
+                this.textContent = 'View Users with Longest Loan Duration';
+            }
+        });
+    </script>
+</body>
+</html>
