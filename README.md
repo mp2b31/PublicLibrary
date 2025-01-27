@@ -10,13 +10,13 @@ This is a simple Flask-based web application for managing a library system. It a
 ## Installation
 1. Clone the repository:
 ```bash
- git clone https://github.com/yourusername/yourproject.git
+ git clone https://github.com/mp2b31/PublicLibrary.git
 ```
 
 2. Set up a Virtual Environment:
 Navigate to the project directory:
 ```
-cd your-repository-name
+cd PublicLibrary
 ```
 Create and activate a virtual environment:
 #### On Windows:
