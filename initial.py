@@ -185,6 +185,8 @@ def statistics():
     durations = [(loan.return_date - loan.loan_date).days for loan in returned_loans]
     avg_duration = mean(durations) if durations else 0
 
+    avg_duration = round(avg_duration, 2)
+
     #books borrowed
     borrowed_stats = db.session.query(
         Loan.user_id, db.func.count(Loan.id).label('loan_count')
